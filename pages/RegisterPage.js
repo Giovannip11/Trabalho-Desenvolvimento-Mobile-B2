@@ -10,29 +10,38 @@ export default function RegisterPage({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = async () => {
+    // Validação de senhas
     if (password !== confirmPassword) {
       Alert.alert('Erro', 'As senhas não coincidem!');
       return;
     }
   
+    // Validação de campos obrigatórios
     if (!email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
   
+    // Validação de formato de email simples
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Erro', 'Por favor, insira um email válido.');
+      return;
+    }
+  
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+        email,
+        password,
       });
   
       if (error) {
-        console.error('Erro ao criar conta:', error);
-        Alert.alert('Erro', error.message);  // Mostra o erro no Alert
-      } else {
-        console.log('Conta criada com sucesso!', data.user);  // Corrigido para acessar 'data.user'
-        Alert.alert('Sucesso', 'Conta criada com sucesso!');
-        navigation.navigate('LoginPage');
+        console.error('Erro ao criar conta:', error.message);
+        Alert.alert('Erro', error.message);
+      } else if (data.user) {
+        console.log('Conta criada com sucesso!', data.user);
+        Alert.alert('Sucesso', 'Conta criada com sucesso! Você está logado.');
+        navigation.navigate('Main'); 
       }
     } catch (error) {
       console.error('Erro ao criar conta:', error);

@@ -5,3 +5,6 @@
 ## Instalação de depêndencias necessárias:
 - npm install
 - npm install @supabase/supabase-js
+login para teste:
+- login:adm@gmail.com
+- senha:adm123
